@@ -5,10 +5,6 @@
  */
 package simpleftp;
 
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 /**
  *
  * @author linroex
@@ -19,14 +15,14 @@ public class SimpleFTP {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-    }
-    
-    private class Client {
-    
-    }
-    
-    private class Server {
-        
+        switch(args[0]) {
+            case "server":
+                Server server = new Server();
+                server.listen();
+                break;
+            case "client":
+                break;
+                    
+        }
     }
 }
