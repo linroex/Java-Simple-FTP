@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -118,16 +121,11 @@ public class Server {
                             
                             break;
                         case "get":
+                            this.output.writeUTF(getFile(new File(columns[1])));
+                            
                             break;
                         case "del":
-                            File file = new File(columns[1]);
-                            
-                            if(file.exists()) {
-                                file.delete();
-                                this.output.writeUTF("Delete " + file.toString() + " success");
-                            } else {
-                                this.output.writeUTF("File doesn't exist");
-                            }
+                            this.output.writeUTF(delFile(new File(columns[1])));
                             
                             break;
                         case "put":
@@ -146,5 +144,41 @@ public class Server {
 
             }
         }
+    }
+    
+    private synchronized String delFile(File serverF) {
+        if (serverF.exists()) {
+            serverF.delete();
+            return "Delete " + serverF.toString() + " success";
+        } else {
+            return "File doesn't exist";
+        }
+    }
+    
+    private synchronized String getFile(File serverF) {
+        String data = "";
+        byte[] buffer = new byte[1024];
+        
+        try {
+            try (FileInputStream fileReader = new FileInputStream(serverF)) {
+                while(fileReader.available() > 0) {
+                    fileReader.read(buffer);
+                    data += new String(buffer, "utf-8");
+                    
+                    buffer = new byte[1024];
+                }
+            }
+            
+            return data.trim();
+        } catch (FileNotFoundException e) {
+            return "File Not found";
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+        
+    }
+    
+    private synchronized void putFile(File clientF, File serverF) {
+        
     }
 }

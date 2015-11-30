@@ -10,6 +10,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -61,6 +64,22 @@ public class Client {
                     this.loginFlag = false;
 
                     System.out.println("Logout success");
+                } else if (data.trim().split(" ")[0].equals("get")) {
+                    this.sendCommand(data);
+                    
+                    try {
+                        try (DataOutputStream fileWriter = new DataOutputStream(new FileOutputStream(new File(data.trim().split(" ")[2])))) {
+                            String receiveFileData = this.receiveData();
+                            System.out.println(receiveFileData);
+                            fileWriter.writeChars(receiveFileData);
+                            
+                        }
+                    } catch (FileNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                            
                 } else {
                     this.sendCommand(data);
                     
