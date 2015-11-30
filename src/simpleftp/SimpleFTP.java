@@ -21,8 +21,9 @@ public class SimpleFTP {
                 server.listen();
                 break;
             case "client":
+                Client client = new Client(args[1]);
+                client.startInteractive();
                 break;
-                    
         }
     }
 }

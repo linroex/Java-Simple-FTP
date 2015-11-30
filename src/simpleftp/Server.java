@@ -43,7 +43,7 @@ public class Server {
     }
 
     private class ListenClientRunnable implements Runnable {
-
+        private boolean connectFlag = true;
         private DataInputStream input;
 
         public ListenClientRunnable(Socket client) {
@@ -56,15 +56,20 @@ public class Server {
 
         @Override
         public void run() {
-            while (true) {
+            while (this.connectFlag) {
                 try {
                     String data = this.input.readUTF();
 
                     System.out.println(data);
 
                     // Identify command and do something.
+                    
                 } catch (IOException e) {
-                    System.out.println(e.getMessage());
+                    if(e.getMessage() == null) {
+                        this.connectFlag = false;
+                        System.out.println("Client break");
+                    }
+                    
                 }
 
             }
