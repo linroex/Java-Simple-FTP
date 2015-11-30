@@ -63,6 +63,10 @@ public class Client {
                     System.out.println("Logout success");
                 } else {
                     this.sendCommand(data);
+                    
+                    String response = this.receiveData();
+                    
+                    System.out.println(response);
                 }
                 
             } else {

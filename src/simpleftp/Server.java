@@ -8,6 +8,7 @@ package simpleftp;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -98,7 +99,6 @@ public class Server {
                                 output.writeUTF("100");     // already login
                             }
                             
-                            output.flush();
                             break;
                         case "logout":
                             System.out.println(this.username + " logout");
@@ -108,6 +108,15 @@ public class Server {
                             
                             break;
                         case "list":
+                            File f = new File(columns[1]);
+                            String fileList = "";
+                            
+                            for(File f_ : f.listFiles()) {
+                               fileList += f_.getName() + "\n";
+                            }
+                            
+                            this.output.writeUTF(fileList);
+                                
                             break;
                         case "get":
                             break;
@@ -116,6 +125,8 @@ public class Server {
                         case "put":
                             break;
                     }
+                    
+                    output.flush();
 
                 } catch (IOException e) {
                     if(e.getMessage() == null) {
