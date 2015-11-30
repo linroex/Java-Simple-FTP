@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  *
@@ -39,6 +40,14 @@ public class Client {
             this.output.writeUTF(command);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+    
+    public void startInteractive() {
+        final Scanner input = new Scanner(System.in);
+        
+        while(true) {
+            this.sendCommand(input.nextLine());
         }
     }
 }

@@ -63,6 +63,7 @@ public class Server {
                     System.out.println(data);
 
                     // Identify command and do something.
+                    
                 } catch (IOException e) {
                     if(e.getMessage() == null) {
                         this.connectFlag = false;

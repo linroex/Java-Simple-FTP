@@ -22,9 +22,8 @@ public class SimpleFTP {
                 break;
             case "client":
                 Client client = new Client(args[1]);
-                client.sendCommand("hello");
+                client.startInteractive();
                 break;
-                    
         }
     }
 }
