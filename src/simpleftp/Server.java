@@ -108,19 +108,27 @@ public class Server {
                             
                             break;
                         case "list":
-                            File f = new File(columns[1]);
                             String fileList = "";
                             
-                            for(File f_ : f.listFiles()) {
+                            for(File f_ : new File(columns[1]).listFiles()) {
                                fileList += f_.getName() + "\n";
                             }
                             
                             this.output.writeUTF(fileList);
-                                
+                            
                             break;
                         case "get":
                             break;
                         case "del":
+                            File file = new File(columns[1]);
+                            
+                            if(file.exists()) {
+                                file.delete();
+                                this.output.writeUTF("Delete " + file.toString() + " success");
+                            } else {
+                                this.output.writeUTF("File doesn't exist");
+                            }
+                            
                             break;
                         case "put":
                             break;
