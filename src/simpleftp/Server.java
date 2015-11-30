@@ -44,7 +44,7 @@ public class Server {
     }
     
     private boolean clientLogin(String username, String password) {
-        if(username.equals("linroex") && password.equals("123456")) {
+        if(username.equals("linroex") == true && password.equals("123456") == true) {
             return true;
         } else {
             return false;
@@ -56,6 +56,8 @@ public class Server {
         private DataInputStream input;
         private DataOutputStream output;
         private final Socket client;
+        private String username;
+        private boolean loginStatus;
 
         public ListenClientRunnable(Socket client) {
             this.client = client;
@@ -80,13 +82,29 @@ public class Server {
                     // detect command type
                     switch(columns[0]) {
                         case "login":
-                            output.writeUTF(String.valueOf(clientLogin(columns[1], columns[2])));
-                            System.out.println(columns[1] + " login");
                             
+                            if(!this.loginStatus) {
+                                this.loginStatus = clientLogin(columns[1], columns[2]);
+
+                                if (this.loginStatus) {
+                                    output.writeUTF("200");     //login success
+                                    System.out.println(columns[1] + " login");
+                                    
+                                    this.username = columns[1];
+                                } else {
+                                    output.writeUTF("300");     //login failed
+                                }
+                            } else {
+                                output.writeUTF("100");     // already login
+                            }
+                            
+                            output.flush();
                             break;
                         case "logout":
-                            output.writeUTF("logout success");
-                            System.out.println(columns[1] + " logout");
+                            System.out.println(this.username + " logout");
+                            
+                            this.username = "";
+                            this.loginStatus = false;
                             
                             break;
                         case "list":

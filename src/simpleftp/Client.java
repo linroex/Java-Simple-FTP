@@ -34,12 +34,14 @@ public class Client {
             
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            System.exit(1);
         }
     }
     
     public void sendCommand(String command) {
         try {
             this.output.writeUTF(command);
+            this.output.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -59,8 +61,6 @@ public class Client {
                     this.loginFlag = false;
 
                     System.out.println("Logout success");
-                    
-                    
                 } else {
                     this.sendCommand(data);
                 }
@@ -73,21 +73,28 @@ public class Client {
                 System.out.print("please enter password: ");
                 String password = input.nextLine();
                 
-                if(this.login(username, password)) {
+                String loginStatus = this.login(username, password);
+                
+                if(loginStatus.equals("200")) {
                     this.loginFlag = true;
                     
                     System.out.println("Hello " + username + "! please enter command:");
-                } else {
+                } else if(loginStatus.equals("300")) {
+                    this.loginFlag = false;
+                    
                     System.out.println("username or password error, please recheck");
+                } else if(loginStatus.equals("100")) {
+                    System.out.println("You are already login");
                 }
             }
             
         }
     }
     
-    private boolean login(String username, String password) {
+    private String login(String username, String password) {
         this.sendCommand("login " + username + " " + password);
-        return Boolean.parseBoolean(this.receiveData());
+
+        return this.receiveData();
     }
     
     private String receiveData() {
