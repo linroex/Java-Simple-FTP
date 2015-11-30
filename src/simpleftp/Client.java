@@ -61,6 +61,8 @@ public class Client {
                 
                 if(this.login(username, password)) {
                     this.loginFlag = true;
+                    
+                    System.out.println("Hello " + username + "! please enter command:");
                 } else {
                     System.out.println("username or password error, please recheck");
                 }
