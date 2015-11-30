@@ -6,6 +6,7 @@
 package simpleftp;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -41,14 +42,24 @@ public class Server {
             }
         }
     }
+    
+    private boolean clientLogin(String username, String password) {
+        if(username.equals("linroex") && password.equals("123456")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private class ListenClientRunnable implements Runnable {
         private boolean connectFlag = true;
         private DataInputStream input;
+        private DataOutputStream output;
 
         public ListenClientRunnable(Socket client) {
             try {
                 this.input = new DataInputStream(client.getInputStream());
+                this.output = new DataOutputStream(client.getOutputStream());
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -59,11 +70,27 @@ public class Server {
             while (this.connectFlag) {
                 try {
                     String data = this.input.readUTF();
-
-                    System.out.println(data);
-
-                    // Identify command and do something.
+                    String[] columns = data.split(" ");
                     
+                    System.out.println("input: " + data);
+                    
+                    // detect command type
+                    switch(columns[0]) {
+                        case "login":
+                            output.writeUTF(String.valueOf(clientLogin(columns[1], columns[2])));
+                            break;
+                        case "logout":
+                            break;
+                        case "list":
+                            break;
+                        case "get":
+                            break;
+                        case "del":
+                            break;
+                        case "put":
+                            break;
+                    }
+
                 } catch (IOException e) {
                     if(e.getMessage() == null) {
                         this.connectFlag = false;

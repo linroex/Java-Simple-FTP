@@ -19,6 +19,8 @@ public class Client {
     private Socket socket;
     private DataInputStream input;
     private DataOutputStream output;
+    
+    private boolean loginFlag = false;
     private final int port = 1234;
     
     public Client(String ipAddress) {
@@ -47,7 +49,38 @@ public class Client {
         final Scanner input = new Scanner(System.in);
         
         while(true) {
-            this.sendCommand(input.nextLine());
+            if(this.loginFlag == true) {
+                this.sendCommand(input.nextLine());
+            } else {
+                // Login
+                System.out.print("login: ");
+                String username = input.nextLine();
+                
+                System.out.print("please enter password: ");
+                String password = input.nextLine();
+                
+                if(this.login(username, password)) {
+                    this.loginFlag = true;
+                } else {
+                    System.out.println("username or password error, please recheck");
+                }
+            }
+            
         }
+    }
+    
+    private boolean login(String username, String password) {
+        this.sendCommand("login " + username + " " + password);
+        return Boolean.parseBoolean(this.receiveData());
+    }
+    
+    private String receiveData() {
+        try {
+            return this.input.readUTF();
+        } catch(IOException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return null;
     }
 }
