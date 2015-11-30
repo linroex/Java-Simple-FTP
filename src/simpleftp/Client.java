@@ -47,10 +47,29 @@ public class Client {
     
     public void startInteractive() {
         final Scanner input = new Scanner(System.in);
+        boolean interactiveFlag = true;
         
-        while(true) {
+        while(interactiveFlag) {
             if(this.loginFlag == true) {
-                this.sendCommand(input.nextLine());
+                String data = input.nextLine();
+                
+                if(data.trim().equals("logout")) {
+                    try {
+                        this.sendCommand("logout ");
+
+                        interactiveFlag = false;
+                        this.input.close();
+                        this.output.close();
+                        this.socket.close();
+                        System.out.println("Logout success");
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    
+                } else {
+                    this.sendCommand(data);
+                }
+                
             } else {
                 // Login
                 System.out.print("login: ");

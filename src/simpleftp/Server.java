@@ -55,11 +55,14 @@ public class Server {
         private boolean connectFlag = true;
         private DataInputStream input;
         private DataOutputStream output;
+        private final Socket client;
 
         public ListenClientRunnable(Socket client) {
+            this.client = client;
+            
             try {
-                this.input = new DataInputStream(client.getInputStream());
-                this.output = new DataOutputStream(client.getOutputStream());
+                this.input = new DataInputStream(this.client.getInputStream());
+                this.output = new DataOutputStream(this.client.getOutputStream());
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -78,8 +81,17 @@ public class Server {
                     switch(columns[0]) {
                         case "login":
                             output.writeUTF(String.valueOf(clientLogin(columns[1], columns[2])));
+                            System.out.println(columns[1] + " login");
+                            
                             break;
                         case "logout":
+                            output.writeUTF("logout success");
+                            System.out.println(columns[1] + " logout");
+                            
+                            input.close();
+                            output.close();
+                            client.close();
+                            
                             break;
                         case "list":
                             break;
