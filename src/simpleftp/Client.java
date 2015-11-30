@@ -54,17 +54,12 @@ public class Client {
                 String data = input.nextLine();
                 
                 if(data.trim().equals("logout")) {
-                    try {
-                        this.sendCommand("logout ");
+                    this.sendCommand("logout ");
 
-                        interactiveFlag = false;
-                        this.input.close();
-                        this.output.close();
-                        this.socket.close();
-                        System.out.println("Logout success");
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
+                    this.loginFlag = false;
+
+                    System.out.println("Logout success");
+                    
                     
                 } else {
                     this.sendCommand(data);

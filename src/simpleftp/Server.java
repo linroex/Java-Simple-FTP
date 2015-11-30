@@ -88,10 +88,6 @@ public class Server {
                             output.writeUTF("logout success");
                             System.out.println(columns[1] + " logout");
                             
-                            input.close();
-                            output.close();
-                            client.close();
-                            
                             break;
                         case "list":
                             break;
